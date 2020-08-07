@@ -39,3 +39,28 @@ func TestTable(t *testing.T) {
 		}
 	}
 }
+
+func TestTableLines(t *testing.T) {
+	tests := []struct {
+		input  string
+		opts   TableOptions
+		output string
+	}{
+		{
+			"one\ntwo\n\n  three  \n     \nfour\n",
+			TableOptions{Columns: 2, MinSep: 3},
+			"one   three\ntwo   four\n",
+		},
+	}
+
+	for _, test := range tests {
+		w := new(strings.Builder)
+		if err := TableLines(strings.NewReader(test.input), w, test.opts); err != nil {
+			t.Errorf("Unexpected error for input %q with options %#v: %v", test.input, test.opts, err)
+			continue
+		}
+		if output := w.String(); output != test.output {
+			t.Errorf("For input %q with options %#v: want %q, got %q", test.input, test.opts, test.output, output)
+		}
+	}
+}

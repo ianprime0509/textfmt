@@ -18,6 +18,11 @@ func TestUntable(t *testing.T) {
 			UntableOptions{MinSep: 2},
 			[]string{"one", "three", "two", "four"},
 		},
+		{
+			"one    three\n    \n\ntwo    four",
+			UntableOptions{MinSep: 1},
+			[]string{"one", "two", "three", "four"},
+		},
 	}
 
 	for _, test := range tests {
@@ -27,7 +32,7 @@ func TestUntable(t *testing.T) {
 			continue
 		}
 		if !cmp.Equal(output, test.output) {
-			t.Errorf("For input %q with options %#v: want %v, got %v", test.input, test.opts, test.output, output)
+			t.Errorf("For input %q with options %#v: want %q, got %q", test.input, test.opts, test.output, output)
 		}
 	}
 }
